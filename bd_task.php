@@ -61,32 +61,45 @@ $products = "SELECT * FROM products ORDER BY id";
 $result = pg_query($connection, $products);
 if(!$result){
     die("Ошибка выполнения запроса");
+}else{
+    while($row = pg_fetch_assoc($result)){
+        echo "id: " . $row['id'] . "\n";
+        echo "name: " . $row['name'] . "\n";
+        echo "price: " . $row['price'] . "\n";
+        echo "quantity: " . $row['quantity'] . "\n";
+        echo "created_at: " . $row['created_at'] . "\n";
+        echo "\n";
+    }
+    pg_free_result($result);
 }
-while($row = pg_fetch_assoc($result)){
-    echo "id: " . $row['id'] . "\n";
-    echo "name: " . $row['name'] . "\n";
-    echo "price: " . $row['price'] . "\n";
-    echo "quantity: " . $row['quantity'] . "\n";
-    echo "created_at: " . $row['created_at'] . "\n";
-    echo "\n";
-}
-pg_free_result($result);
 ///поиск по названию
 $search = $name4;
 $stmt = "SELECT * FROM products WHERE name = $1";
 $result = pg_query_params($connection, $stmt, [$search]);
 if(!$result){
     die("Ошибка выполнения запроса");
+}else{
+    echo "Результтат поиска \n";
+    while($row = pg_fetch_assoc($result)){
+        echo "id: " . $row['id'] . "\n";
+        echo "name: " . $row['name'] . "\n";
+        echo "price: " . $row['price'] . "\n";
+        echo "quantity: " . $row['quantity'] . "\n";
+        echo "created_at: " . $row['created_at'] . "\n";
+        echo "\n";
+    }
+    pg_free_result($result);
 }
-echo "Результтат поиска";
-while($row = pg_fetch_assoc($result)){
-    echo "id: " . $row['id'] . "\n";
-    echo "name: " . $row['name'] . "\n";
-    echo "price: " . $row['price'] . "\n";
-    echo "quantity: " . $row['quantity'] . "\n";
-    echo "created_at: " . $row['created_at'] . "\n";
-    echo "\n";
+///Обновление цены
+$name = "product3";
+$newprice = 913.3;
+$update = "UPDATE products SET price = $1 WHERE name = $2";
+$result = pg_query_params($connection, $update, [$newprice, $name]);
+if(!$result){
+    die("Ошибка выполнения запроса");
+}else{
+    echo "Изменения добавлены";
 }
-pg_free_result($result);
 pg_close($connection);
+
 ?>
